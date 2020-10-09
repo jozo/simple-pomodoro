@@ -6,15 +6,15 @@ import (
 
 func main() {
 	app_ := app.NewWithID("io.jozo.simple-pomodoro")
-	model_ := loadModel()
 
 	ticking := make(chan bool, 1)
 	pomodoro := &controller{
-		roundDone:       make(chan bool, 1),
-		stopTickingRead: ticking,
-		stopTickingSend: ticking,
+		model:            loadModel(),
+		roundDone:        make(chan bool, 1),
+		pauseTickingRead: ticking,
+		pauseTickingSend: ticking,
 	}
-	pomodoro.createUI(app_, model_)
+	pomodoro.createUI(app_)
 
 	app_.Run()
 }
