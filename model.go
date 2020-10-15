@@ -39,12 +39,12 @@ type Model struct {
 func loadSettings() Settings {
 	return Settings{
 		numberOfRounds: 4,
-		workStep:       Step{kind: WORK, duration: 5 * time.Second},
-		breakStep:      Step{kind: BREAK, duration: 2 * time.Second},
-		longBreakStep:  Step{kind: LONG_BREAK, duration: 7 * time.Second},
-		//workStep:       Step{kind: WORK, duration: 25 * time.Minute},
-		//breakStep:      Step{kind: BREAK, duration: 5 * time.Minute},
-		//longBreakStep:  Step{kind: LONG_BREAK, duration: 15 * time.Minute},
+		//workStep:       Step{kind: WORK, duration: 5 * time.Second},
+		//breakStep:      Step{kind: BREAK, duration: 2 * time.Second},
+		//longBreakStep:  Step{kind: LONG_BREAK, duration: 7 * time.Second},
+		workStep:      Step{kind: WORK, duration: 25 * time.Minute},
+		breakStep:     Step{kind: BREAK, duration: 5 * time.Minute},
+		longBreakStep: Step{kind: LONG_BREAK, duration: 15 * time.Minute},
 	}
 }
 

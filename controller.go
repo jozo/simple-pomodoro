@@ -47,13 +47,13 @@ func (ctrl *controller) startTicking() {
 func (ctrl *controller) startPauseTimer() {
 	if ctrl.model.runState == PAUSED {
 		ctrl.model.runState = RUNNING
-		ctrl.view.startPauseButton.SetText("Pause")
+		ctrl.view.startPauseButton.SetIcon(pauseIcon)
 		go ctrl.startTicking()
 	} else {
 		ctrl.model.runState = PAUSED
 		ctrl.pauseTickingSend <- true
 		ctrl.ticker.Stop()
-		ctrl.view.startPauseButton.SetText("Start")
+		ctrl.view.startPauseButton.SetIcon(playIcon)
 		ctrl.updateTimeLabel(ctrl.model.currentStep.duration)
 	}
 }
@@ -66,7 +66,7 @@ func (ctrl *controller) updateTimeLabel(remaining time.Duration) {
 func (ctrl *controller) goToNextStep() {
 	ctrl.setNextStep()
 	// show next step in UI
-	ctrl.view.startPauseButton.SetText("Start")
+	ctrl.view.startPauseButton.SetIcon(playIcon)
 	ctrl.updateTimeLabel(ctrl.model.currentStep.duration)
 }
 
