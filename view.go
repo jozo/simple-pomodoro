@@ -37,20 +37,24 @@ func (t *tappableIcon) Tapped(_ *fyne.PointEvent) {
 func (t *tappableIcon) TappedSecondary(_ *fyne.PointEvent) {
 }
 
-func (ctrl *controller) createUI(app fyne.App) {
+type View struct {
+	preferences      PreferencesView
+	roundsLabel      *widget.Label
+	timeLabel        *canvas.Text
+	startPauseButton *widget.Button
+
+	// callbacks
+	startPauseTapped func()
+}
+
+func (view *View) create(app fyne.App, model Model) {
+	loadIcons()
 	w := app.NewWindow("Simple pomodoro")
-	playIcon = theme.NewThemedResource(playIconRaw, nil)
-	pauseIcon = theme.NewThemedResource(pauseIconRaw, nil)
-	settingsIcon = theme.NewThemedResource(settingsIconRaw, nil)
-	ctrl.view.timeLabel = canvas.NewText(durationToString(ctrl.model.currentStep.duration), color.White)
-	ctrl.view.timeLabel.TextSize = 40
-	ctrl.view.roundsLabel = widget.NewLabel(
-		fmt.Sprintf("%d/%d",
-			ctrl.model.currentRound,
-			ctrl.model.settings.numberOfRounds),
-	)
-	ctrl.view.startPauseButton = widget.NewButtonWithIcon("", playIcon, func() {
-		ctrl.startPauseTimer()
+	view.timeLabel = canvas.NewText(durationToString(model.currentStep.duration), color.White)
+	view.timeLabel.TextSize = 40
+	view.roundsLabel = widget.NewLabel("")
+	view.startPauseButton = widget.NewButtonWithIcon("", playIcon, func() {
+		view.startPauseTapped()
 	})
 
 	l := fyne.NewContainerWithLayout(
@@ -62,11 +66,11 @@ func (ctrl *controller) createUI(app fyne.App) {
 				layout.NewVBoxLayout(),
 				fyne.NewContainerWithLayout(
 					layout.NewCenterLayout(),
-					ctrl.view.timeLabel,
+					view.timeLabel,
 				),
 				fyne.NewContainerWithLayout(
 					layout.NewCenterLayout(),
-					ctrl.view.startPauseButton,
+					view.startPauseButton,
 				),
 			),
 		),
@@ -76,10 +80,10 @@ func (ctrl *controller) createUI(app fyne.App) {
 			layout.NewSpacer(),
 			fyne.NewContainerWithLayout(
 				layout.NewCenterLayout(),
-				ctrl.view.roundsLabel,
+				view.roundsLabel,
 			),
 			newTappableIcon(settingsIcon, func() {
-				showSettings(app, ctrl.model.settings)
+				view.preferences.create(app)
 			}),
 		),
 	)
@@ -88,19 +92,55 @@ func (ctrl *controller) createUI(app fyne.App) {
 	w.Show()
 }
 
-func (ctrl *controller) refreshUIAfterStep() {
-	ctrl.view.roundsLabel.Text = fmt.Sprintf("%d/%d", ctrl.model.currentRound, ctrl.model.settings.numberOfRounds)
-	ctrl.view.roundsLabel.Refresh()
-	ctrl.view.timeLabel.Refresh()
+func (view *View) setRounds(round int, rounds int) {
+	view.roundsLabel.SetText(fmt.Sprintf("%d/%d", round, rounds))
+	view.roundsLabel.Refresh()
 }
 
-func showSettings(app fyne.App, set Settings) {
+func (view *View) setPause() {
+	view.startPauseButton.SetIcon(pauseIcon)
+}
+
+func (view *View) setPlay() {
+	view.startPauseButton.SetIcon(playIcon)
+}
+
+func (view *View) setTime(remaining time.Duration) {
+	view.timeLabel.Text = durationToString(remaining)
+	view.timeLabel.Refresh()
+}
+
+type PreferencesView struct {
+	workEntry      *widget.Entry
+	breakEntry     *widget.Entry
+	longBreakEntry *widget.Entry
+	roundsEntry    *widget.Entry
+
+	// callbacks
+	preferencesChanged func(int, int, int, int)
+}
+
+func (view PreferencesView) extract() (int, int, int, int) {
+	rounds, _ := strconv.Atoi(view.roundsEntry.Text)
+	work, _ := strconv.Atoi(view.workEntry.Text)
+	break_, _ := strconv.Atoi(view.breakEntry.Text)
+	longBreak, _ := strconv.Atoi(view.longBreakEntry.Text)
+	return rounds, work, break_, longBreak
+}
+
+func (view *PreferencesView) create(app fyne.App) {
 	w := app.NewWindow("Preferences")
+	pref := app.Preferences()
+	view.workEntry = newNumberEntry(pref.IntWithFallback("workDur", 25))
+	view.breakEntry = newNumberEntry(pref.IntWithFallback("breakDur", 5))
+	view.longBreakEntry = newNumberEntry(pref.IntWithFallback("longBreakDur", 15))
+	view.roundsEntry = newNumberEntry(pref.IntWithFallback("numberOfRounds", 4))
+
 	f := widget.NewForm(
-		widget.NewFormItem("Work (mins)", newEntryWithDuration(set.workStep.duration)),
-		widget.NewFormItem("Break (mins)", newEntryWithDuration(set.breakStep.duration)),
-		widget.NewFormItem("Long Break (mins)", newEntryWithDuration(set.longBreakStep.duration)),
-		widget.NewFormItem("Number of rounds", newEntryWithText(strconv.Itoa(set.numberOfRounds))),
+		widget.NewFormItem("Work (mins)", view.workEntry),
+		widget.NewFormItem("Break (mins)", view.breakEntry),
+		widget.NewFormItem("Long Break (mins)", view.longBreakEntry),
+		widget.NewFormItem("Number of rounds", view.roundsEntry),
 	)
 	l := fyne.NewContainerWithLayout(
 		layout.NewVBoxLayout(),
@@ -111,7 +151,10 @@ func showSettings(app fyne.App, set Settings) {
 		layout.NewSpacer(),
 		fyne.NewContainerWithLayout(
 			layout.NewCenterLayout(),
-			widget.NewButton("Save", func() {}),
+			widget.NewButton("Save", func() {
+				view.preferencesChanged(view.extract())
+				w.Close()
+			}),
 		),
 		layout.NewSpacer(),
 	)
@@ -120,15 +163,16 @@ func showSettings(app fyne.App, set Settings) {
 	w.Show()
 }
 
-func newEntryWithDuration(dur time.Duration) *widget.Entry {
-	min := dur / time.Minute
-	text := fmt.Sprintf("%d", min)
-	return newEntryWithText(text)
-}
-
-func newEntryWithText(text string) *widget.Entry {
+func newNumberEntry(number int) *widget.Entry {
 	e := widget.NewEntry()
-	e.SetText(text)
+	t := strconv.Itoa(number)
+	e.SetText(t)
+	e.OnChanged = func(s string) {
+		_, err := strconv.Atoi(s)
+		if err != nil {
+			e.SetText(t)
+		}
+	}
 	return e
 }
 
@@ -137,4 +181,10 @@ func durationToString(duration time.Duration) string {
 	sec := duration - min*time.Minute
 	roundedSec := int(math.Round(sec.Seconds()))
 	return fmt.Sprintf("%02d:%02d", min, roundedSec)
+}
+
+func loadIcons() {
+	playIcon = theme.NewThemedResource(playIconRaw, nil)
+	pauseIcon = theme.NewThemedResource(pauseIconRaw, nil)
+	settingsIcon = theme.NewThemedResource(settingsIconRaw, nil)
 }

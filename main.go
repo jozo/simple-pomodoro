@@ -8,13 +8,16 @@ func main() {
 	app_ := app.NewWithID("io.jozo.simple-pomodoro")
 
 	ticking := make(chan bool, 1)
-	pomodoro := &controller{
-		model:            loadModel(),
+	controller := &Controller{
+		app:              app_,
 		roundDone:        make(chan bool, 1),
 		pauseTickingRead: ticking,
 		pauseTickingSend: ticking,
 	}
-	pomodoro.createUI(app_)
+	controller.loadPreferences()
+	controller.loadModel()
+	controller.bindView()
+	controller.showApp()
 
 	app_.Run()
 }
