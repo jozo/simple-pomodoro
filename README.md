@@ -13,3 +13,6 @@ fyne bundle -package main -name settingsIconRaw -append icons/settings.svg >> ic
 ```shell
 fyne package -icon icons/app-icon.png -name "Simple Pomodoro" -release -appID "io.jozo.simple-pomodoro"
 ```
+
+## Consider
+https://github.com/gen2brain/beeep

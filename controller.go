@@ -67,6 +67,9 @@ func (ctrl *Controller) goToNextStep() {
 	ctrl.view.setPlay()
 	ctrl.view.setTime(ctrl.model.currentStep.duration)
 	ctrl.view.setRounds(ctrl.model.currentRound, ctrl.preferences.numberOfRounds)
+	ctrl.app.SendNotification(
+		&fyne.Notification{Title: "Simple Pomodoro", Content: "Step has ended!"},
+	)
 }
 
 func (ctrl *Controller) setNextStep() {
@@ -95,8 +98,8 @@ func (ctrl *Controller) savePreferences(rounds int, work int, shortBreak int, lo
 }
 
 func (ctrl *Controller) loadPreferences() {
-	//unit := time.Minute
-	unit := time.Second
+	unit := time.Minute
+	//unit := time.Second
 	pref := ctrl.app.Preferences()
 
 	workDur := unit * time.Duration(pref.IntWithFallback("workDur", 25))
