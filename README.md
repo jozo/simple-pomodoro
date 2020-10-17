@@ -1,18 +1,20 @@
 # simple-pomodoro
 
-## Icons
-https://github.com/tabler/tabler-icons
-
-```shell
-fyne bundle -package main -name playIconRaw icons/player-play.svg > icons.go
-fyne bundle -package main -name pauseIconRaw -append icons/player-pause.svg >> icons.go
-fyne bundle -package main -name settingsIconRaw -append icons/settings.svg >> icons.go
+## Packaging
+_Note_: I changed SendNotification in app_darwin.go from fyne to:
+```go
+template := `display notification "%s" with title "%s" sound name "default"`
 ```
 
-## Packaging
+**TO BUILD**:
 ```shell
-fyne package -icon icons/app-icon.png -name "Simple Pomodoro" -release -appID "io.jozo.simple-pomodoro"
+make build
 ```
 
 ## Consider
 https://github.com/gen2brain/beeep
+
+## TODO
+- About section
+- report bug link
+- Zobrazit aktualny krok

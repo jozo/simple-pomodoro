@@ -13,8 +13,6 @@ import (
 	"time"
 )
 
-var playIcon, pauseIcon, settingsIcon *theme.ThemedResource
-
 type tappableIcon struct {
 	widget.Icon
 	OnTapped func()
@@ -48,12 +46,11 @@ type View struct {
 }
 
 func (view *View) create(app fyne.App, model Model) {
-	loadIcons()
 	w := app.NewWindow("Simple pomodoro")
 	view.timeLabel = canvas.NewText(durationToString(model.currentStep.duration), color.White)
 	view.timeLabel.TextSize = 40
 	view.roundsLabel = widget.NewLabel("")
-	view.startPauseButton = widget.NewButtonWithIcon("", playIcon, func() {
+	view.startPauseButton = widget.NewButtonWithIcon("", theme.MediaPlayIcon(), func() {
 		view.startPauseTapped()
 	})
 
@@ -82,7 +79,7 @@ func (view *View) create(app fyne.App, model Model) {
 				layout.NewCenterLayout(),
 				view.roundsLabel,
 			),
-			newTappableIcon(settingsIcon, func() {
+			newTappableIcon(theme.SettingsIcon(), func() {
 				view.preferences.create(app)
 			}),
 		),
@@ -98,11 +95,11 @@ func (view *View) setRounds(round int, rounds int) {
 }
 
 func (view *View) setPause() {
-	view.startPauseButton.SetIcon(pauseIcon)
+	view.startPauseButton.SetIcon(theme.MediaPauseIcon())
 }
 
 func (view *View) setPlay() {
-	view.startPauseButton.SetIcon(playIcon)
+	view.startPauseButton.SetIcon(theme.MediaPlayIcon())
 }
 
 func (view *View) setTime(remaining time.Duration) {
@@ -118,14 +115,6 @@ type PreferencesView struct {
 
 	// callbacks
 	preferencesChanged func(int, int, int, int)
-}
-
-func (view PreferencesView) extract() (int, int, int, int) {
-	rounds, _ := strconv.Atoi(view.roundsEntry.Text)
-	work, _ := strconv.Atoi(view.workEntry.Text)
-	break_, _ := strconv.Atoi(view.breakEntry.Text)
-	longBreak, _ := strconv.Atoi(view.longBreakEntry.Text)
-	return rounds, work, break_, longBreak
 }
 
 func (view *PreferencesView) create(app fyne.App) {
@@ -163,17 +152,31 @@ func (view *PreferencesView) create(app fyne.App) {
 	w.Show()
 }
 
+func (view PreferencesView) extract() (int, int, int, int) {
+	rounds, _ := strconv.Atoi(view.roundsEntry.Text)
+	work, _ := strconv.Atoi(view.workEntry.Text)
+	break_, _ := strconv.Atoi(view.breakEntry.Text)
+	longBreak, _ := strconv.Atoi(view.longBreakEntry.Text)
+	return rounds, work, break_, longBreak
+}
+
 func newNumberEntry(number int) *widget.Entry {
-	e := widget.NewEntry()
-	t := strconv.Itoa(number)
-	e.SetText(t)
-	e.OnChanged = func(s string) {
+	entry := widget.NewEntry()
+	text := strconv.Itoa(number)
+	entry.SetText(text)
+	lastCorrect := text
+	entry.OnChanged = func(s string) {
+		if s == "" {
+			return
+		}
 		_, err := strconv.Atoi(s)
 		if err != nil {
-			e.SetText(t)
+			entry.SetText(lastCorrect)
+		} else {
+			lastCorrect = s
 		}
 	}
-	return e
+	return entry
 }
 
 func durationToString(duration time.Duration) string {
@@ -181,10 +184,4 @@ func durationToString(duration time.Duration) string {
 	sec := duration - min*time.Minute
 	roundedSec := int(math.Round(sec.Seconds()))
 	return fmt.Sprintf("%02d:%02d", min, roundedSec)
-}
-
-func loadIcons() {
-	playIcon = theme.NewThemedResource(playIconRaw, nil)
-	pauseIcon = theme.NewThemedResource(pauseIconRaw, nil)
-	settingsIcon = theme.NewThemedResource(settingsIconRaw, nil)
 }

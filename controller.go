@@ -3,6 +3,7 @@ package main
 import (
 	"fyne.io/fyne"
 	"log"
+	"os"
 	"time"
 )
 
@@ -84,22 +85,11 @@ func (ctrl *Controller) bindView() {
 	ctrl.view.startPauseTapped = ctrl.startPauseTimer
 }
 
-func (ctrl *Controller) savePreferences(rounds int, work int, shortBreak int, longBreak int) {
-	pref := ctrl.app.Preferences()
-	pref.SetInt("numberOfRounds", rounds)
-	pref.SetInt("workDur", work)
-	pref.SetInt("breakDur", shortBreak)
-	pref.SetInt("longBreakDur", longBreak)
-	ctrl.loadPreferences()
-	ctrl.view.setRounds(ctrl.model.currentRound, ctrl.preferences.numberOfRounds)
-	if ctrl.model.runState == PAUSED {
-		ctrl.view.setTime(ctrl.model.currentStep.duration)
-	}
-}
-
 func (ctrl *Controller) loadPreferences() {
 	unit := time.Minute
-	//unit := time.Second
+	if os.Getenv("SIMPLE_POMODORO_DEBUG") == "1" {
+		unit = time.Second
+	}
 	pref := ctrl.app.Preferences()
 
 	workDur := unit * time.Duration(pref.IntWithFallback("workDur", 25))
@@ -117,6 +107,19 @@ func (ctrl *Controller) loadPreferences() {
 		ctrl.model.currentStep = ctrl.preferences.breakStep
 	} else {
 		ctrl.model.currentStep = ctrl.preferences.longBreakStep
+	}
+}
+
+func (ctrl *Controller) savePreferences(rounds int, work int, shortBreak int, longBreak int) {
+	pref := ctrl.app.Preferences()
+	pref.SetInt("numberOfRounds", rounds)
+	pref.SetInt("workDur", work)
+	pref.SetInt("breakDur", shortBreak)
+	pref.SetInt("longBreakDur", longBreak)
+	ctrl.loadPreferences()
+	ctrl.view.setRounds(ctrl.model.currentRound, ctrl.preferences.numberOfRounds)
+	if ctrl.model.runState == PAUSED {
+		ctrl.view.setTime(ctrl.model.currentStep.duration)
 	}
 }
 

@@ -20,7 +20,10 @@
    version="1.1"
    id="svg90"
    sodipodi:docname="app-icon.svg"
-   inkscape:version="1.0.1 (c497b03c, 2020-09-10)">
+   inkscape:version="1.0.1 (c497b03c, 2020-09-10)"
+   inkscape:export-filename="/Users/jozo/go/src/github.com/jozo/simple-pomodoro/icons/app-icon.png"
+   inkscape:export-xdpi="2000"
+   inkscape:export-ydpi="2000">
   <metadata
      id="metadata96">
     <rdf:RDF>
@@ -29,7 +32,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -56,7 +59,7 @@
        x2="23.314285"
        y2="22.987755"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1,0,0,1.0057709,0,-0.00395719)" />
+       gradientTransform="matrix(0.92820381,0,0,0.93356037,0.81609214,0.78203394)" />
   </defs>
   <sodipodi:namedview
      pagecolor="#ffffff"
@@ -71,30 +74,32 @@
      inkscape:window-height="983"
      id="namedview92"
      showgrid="false"
-     inkscape:zoom="23.213861"
-     inkscape:cx="14.396874"
-     inkscape:cy="13.306122"
-     inkscape:window-x="0"
-     inkscape:window-y="23"
+     inkscape:zoom="11.606931"
+     inkscape:cx="28.014268"
+     inkscape:cy="26.258634"
+     inkscape:window-x="826"
+     inkscape:window-y="193"
      inkscape:window-maximized="0"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0" />
   <path
      stroke="none"
-     d="M0 0h24v24H0z"
+     d="M 0.86155475,0.86155475 H 23.138445 V 23.138445 H 0.86155475 Z"
      fill="none"
-     id="path80" />
+     id="path80"
+     style="stroke-width:1.85641" />
   <g
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="Background">
     <rect
-       style="fill:url(#linearGradient1009);fill-opacity:1;stroke:none;stroke-width:5.56192;stroke-linejoin:round;stroke-opacity:0"
+       style="fill:url(#linearGradient1009);fill-opacity:1;stroke:none;stroke-width:5.1626;stroke-linejoin:round;stroke-opacity:0"
        id="rect124"
-       width="22.791836"
-       height="22.792"
-       x="0.65306121"
-       y="0.6857143"
-       ry="0.98777527"
+       width="21.155468"
+       height="21.155621"
+       x="1.422266"
+       y="1.4221897"
+       ry="2.6914349"
        inkscape:export-filename="/Users/jozo/go/src/github.com/jozo/simple-pomodoro/icons/app-icon.png"
        inkscape:export-xdpi="2106.0173"
        inkscape:export-ydpi="2106.0173" />
@@ -106,7 +111,7 @@
      style="display:inline">
     <g
        id="g993"
-       transform="translate(0.0489791,0.08171421)">
+       transform="matrix(0.92820381,0,0,0.92820381,0.86155428,0.86155428)">
       <polyline
          points="12 10 12 13 14 13"
          id="polyline84"
