@@ -38,6 +38,7 @@ func (t *tappableIcon) TappedSecondary(_ *fyne.PointEvent) {
 type View struct {
 	preferences      PreferencesView
 	roundsLabel      *widget.Label
+	stepLabel        *widget.Label
 	timeLabel        *canvas.Text
 	startPauseButton *widget.Button
 
@@ -50,6 +51,7 @@ func (view *View) create(app fyne.App, model Model) {
 	view.timeLabel = canvas.NewText(durationToString(model.currentStep.duration), color.White)
 	view.timeLabel.TextSize = 40
 	view.roundsLabel = widget.NewLabel("")
+	view.stepLabel = widget.NewLabel("")
 	view.startPauseButton = widget.NewButtonWithIcon("", theme.MediaPlayIcon(), func() {
 		view.startPauseTapped()
 	})
@@ -75,6 +77,7 @@ func (view *View) create(app fyne.App, model Model) {
 		fyne.NewContainerWithLayout(
 			layout.NewHBoxLayout(),
 			layout.NewSpacer(),
+			view.stepLabel,
 			fyne.NewContainerWithLayout(
 				layout.NewCenterLayout(),
 				view.roundsLabel,
@@ -105,6 +108,19 @@ func (view *View) setPlay() {
 func (view *View) setTime(remaining time.Duration) {
 	view.timeLabel.Text = durationToString(remaining)
 	view.timeLabel.Refresh()
+}
+
+func (view *View) setStep(kind StepKind) {
+	var text string
+	if kind == WORK {
+		text = "work"
+	} else if kind == BREAK {
+		text = "break"
+	} else {
+		text = "long break"
+	}
+	view.stepLabel.SetText(text)
+	view.stepLabel.Refresh()
 }
 
 type PreferencesView struct {
