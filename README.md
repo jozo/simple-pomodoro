@@ -15,5 +15,3 @@ make build
 https://github.com/gen2brain/beeep
 
 ## TODO
-- About section
-- report bug link

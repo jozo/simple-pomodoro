@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/widget"
 	"image/color"
 	"math"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -141,18 +142,65 @@ func (view *PreferencesView) create(app fyne.App) {
 	view.longBreakEntry = newNumberEntry(pref.IntWithFallback("longBreakDur", 15))
 	view.roundsEntry = newNumberEntry(pref.IntWithFallback("numberOfRounds", 4))
 
-	f := widget.NewForm(
-		widget.NewFormItem("Work (mins)", view.workEntry),
-		widget.NewFormItem("Break (mins)", view.breakEntry),
-		widget.NewFormItem("Long Break (mins)", view.longBreakEntry),
-		widget.NewFormItem("Number of rounds", view.roundsEntry),
+	tabs := widget.NewTabContainer(
+		widget.NewTabItem("Preferences", view.createPreferencesLayout(w)),
+		widget.NewTabItem("About", view.createAboutLayout()),
 	)
-	l := fyne.NewContainerWithLayout(
+
+	w.Resize(fyne.NewSize(300, 300))
+	w.SetContent(tabs)
+	w.Show()
+}
+
+func (view *PreferencesView) createAboutLayout() *fyne.Container {
+	reportURL, _ := url.Parse("mailto:pomodoro@jozo.io")
+	return fyne.NewContainerWithLayout(
+		layout.NewCenterLayout(),
+		fyne.NewContainerWithLayout(
+			layout.NewVBoxLayout(),
+			widget.NewLabelWithStyle(
+				"Simple Pomodoro",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{},
+			),
+			widget.NewLabelWithStyle(
+				"v0.1.0",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{},
+			),
+			widget.NewHyperlinkWithStyle(
+				"Report bug or idea",
+				reportURL,
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Monospace: true},
+			),
+		),
+	)
+}
+
+func (view *PreferencesView) createPreferencesLayout(w fyne.Window) *fyne.Container {
+	form := fyne.NewContainerWithLayout(
+		layout.NewGridLayout(2),
+		newLeftFormItem("Work:"),
+		newRightFormItem(view.workEntry),
+		newLeftFormItem("Break:"),
+		newRightFormItem(view.breakEntry),
+		newLeftFormItem("Long Break:"),
+		newRightFormItem(view.longBreakEntry),
+	)
+	prefLayout := fyne.NewContainerWithLayout(
 		layout.NewVBoxLayout(),
 		fyne.NewContainerWithLayout(
-			layout.NewMaxLayout(),
-			f,
+			layout.NewHBoxLayout(),
+			fyne.NewContainerWithLayout(
+				layout.NewCenterLayout(),
+				widget.NewLabel("Number of rounds:"),
+			),
+			view.roundsEntry,
+			layout.NewSpacer(),
 		),
+		widget.NewLabel("Steps durations (minutes):"),
+		form,
 		layout.NewSpacer(),
 		fyne.NewContainerWithLayout(
 			layout.NewCenterLayout(),
@@ -163,9 +211,29 @@ func (view *PreferencesView) create(app fyne.App) {
 		),
 		layout.NewSpacer(),
 	)
-	w.Resize(fyne.NewSize(250, 230))
-	w.SetContent(l)
-	w.Show()
+	return prefLayout
+}
+
+func newLeftFormItem(lab string) *fyne.Container {
+	return fyne.NewContainerWithLayout(
+		layout.NewHBoxLayout(),
+		layout.NewSpacer(),
+		fyne.NewContainerWithLayout(
+			layout.NewCenterLayout(),
+			widget.NewLabel(lab),
+		),
+	)
+}
+
+func newRightFormItem(wid *widget.Entry) *fyne.Container {
+	return fyne.NewContainerWithLayout(
+		layout.NewHBoxLayout(),
+		fyne.NewContainerWithLayout(
+			layout.NewCenterLayout(),
+			wid,
+		),
+		layout.NewSpacer(),
+	)
 }
 
 func (view PreferencesView) extract() (int, int, int, int) {
