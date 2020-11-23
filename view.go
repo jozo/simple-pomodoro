@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"fyne.io/fyne"
 	"fyne.io/fyne/canvas"
+	"fyne.io/fyne/container"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
 	"fyne.io/fyne/widget"
@@ -37,14 +38,16 @@ func (t *tappableIcon) TappedSecondary(_ *fyne.PointEvent) {
 }
 
 type View struct {
-	preferences      PreferencesView
-	roundsLabel      *widget.Label
-	stepLabel        *widget.Label
-	timeLabel        *canvas.Text
-	startPauseButton *widget.Button
+	notificationWindow fyne.Window
+	preferences        PreferencesView
+	roundsLabel        *widget.Label
+	stepLabel          *widget.Label
+	timeLabel          *canvas.Text
+	startPauseButton   *widget.Button
 
 	// callbacks
-	startPauseTapped func()
+	startPauseTapped   func()
+	notificationClosed func()
 }
 
 func (view *View) create(app fyne.App, model Model) {
@@ -90,7 +93,11 @@ func (view *View) create(app fyne.App, model Model) {
 	)
 	w.Resize(fyne.NewSize(250, 250))
 	w.SetContent(l)
+	w.SetOnClosed(func() {
+		view.notificationWindow.Close()
+	})
 	w.Show()
+	view.createNotificationWindow(app)
 }
 
 func (view *View) setRounds(round int, rounds int) {
@@ -122,6 +129,20 @@ func (view *View) setStep(kind StepKind) {
 	}
 	view.stepLabel.SetText(text)
 	view.stepLabel.Refresh()
+}
+
+func (view *View) createNotificationWindow(app fyne.App) {
+	view.notificationWindow = app.NewWindow("Step has ended")
+	view.notificationWindow.Resize(fyne.NewSize(100, 100))
+
+	view.notificationWindow.SetContent(container.NewVBox(
+		widget.NewLabel("Step has ended!"),
+		widget.NewIcon(theme.VolumeUpIcon()),
+		widget.NewButton("OK", func() {
+			view.notificationWindow.Hide()
+			view.notificationClosed()
+		}),
+	))
 }
 
 type PreferencesView struct {

@@ -2,6 +2,9 @@ package main
 
 import (
 	"fyne.io/fyne"
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/speaker"
+	"github.com/faiface/beep/vorbis"
 	"log"
 	"os"
 	"time"
@@ -18,6 +21,7 @@ type Controller struct {
 	roundDone        <-chan bool
 	pauseTickingRead <-chan bool
 	pauseTickingSend chan<- bool
+	soundCtrl        *beep.Ctrl
 }
 
 func (ctrl *Controller) startTicking() {
@@ -69,9 +73,7 @@ func (ctrl *Controller) goToNextStep() {
 	ctrl.view.setTime(ctrl.model.currentStep.duration)
 	ctrl.view.setRounds(ctrl.model.currentRound, ctrl.preferences.numberOfRounds)
 	ctrl.view.setStep(ctrl.model.currentStep.kind)
-	ctrl.app.SendNotification(
-		&fyne.Notification{Title: "Simple Pomodoro", Content: "Step has ended!"},
-	)
+	ctrl.showNotification()
 }
 
 func (ctrl *Controller) setNextStep() {
@@ -136,4 +138,36 @@ func (ctrl *Controller) showApp() {
 	ctrl.view.create(ctrl.app, ctrl.model)
 	ctrl.view.setRounds(ctrl.model.currentRound, ctrl.preferences.numberOfRounds)
 	ctrl.view.setStep(ctrl.model.currentStep.kind)
+}
+
+func (ctrl *Controller) showNotification() {
+	if ctrl.soundCtrl == nil {
+		ctrl.initializeSoundCtrl()
+		ctrl.view.notificationClosed = func() {
+			speaker.Lock()
+			ctrl.soundCtrl.Paused = true
+			speaker.Unlock()
+		}
+	}
+
+	ctrl.view.notificationWindow.Show()
+	speaker.Lock()
+	ctrl.soundCtrl.Paused = false
+	speaker.Unlock()
+}
+
+func (ctrl *Controller) initializeSoundCtrl() {
+	sound := NewMemFile(alarmSound.Content())
+	streamer, format, err := vorbis.Decode(sound)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer streamer.Close()
+	loop := beep.Loop(-1, streamer)
+	err = speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctrl.soundCtrl = &beep.Ctrl{Streamer: loop, Paused: true}
+	speaker.Play(ctrl.soundCtrl)
 }

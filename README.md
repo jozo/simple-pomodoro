@@ -11,7 +11,10 @@ template := `display notification "%s" with title "%s" sound name "default"`
 make build
 ```
 
-## Consider
-https://github.com/gen2brain/beeep
+# Sounds
+https://freesfx.co.uk
 
-## TODO
+# Resources
+```shell
+fyne bundle -package main -name alarmSound "sounds/Electronic Beeping Alarm Clock.ogg" > sounds.go
+```
