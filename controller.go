@@ -2,9 +2,10 @@ package main
 
 import (
 	"fyne.io/fyne"
+	"fyne.io/fyne/theme"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
-	"github.com/faiface/beep/vorbis"
+	"github.com/faiface/beep/wav"
 	"log"
 	"os"
 	"time"
@@ -135,6 +136,7 @@ func (ctrl *Controller) loadModel() {
 }
 
 func (ctrl *Controller) showApp() {
+	ctrl.app.Settings().SetTheme(theme.DarkTheme())
 	ctrl.view.create(ctrl.app, ctrl.model)
 	ctrl.view.setRounds(ctrl.model.currentRound, ctrl.preferences.numberOfRounds)
 	ctrl.view.setStep(ctrl.model.currentStep.kind)
@@ -150,7 +152,7 @@ func (ctrl *Controller) showNotification() {
 		}
 	}
 
-	ctrl.view.notificationWindow.Show()
+	ctrl.view.createNotificationWindow(ctrl.app)
 	speaker.Lock()
 	ctrl.soundCtrl.Paused = false
 	speaker.Unlock()
@@ -158,7 +160,7 @@ func (ctrl *Controller) showNotification() {
 
 func (ctrl *Controller) initializeSoundCtrl() {
 	sound := NewMemFile(alarmSound.Content())
-	streamer, format, err := vorbis.Decode(sound)
+	streamer, format, err := wav.Decode(sound)
 	if err != nil {
 		log.Fatal(err)
 	}

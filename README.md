@@ -16,5 +16,15 @@ https://freesfx.co.uk
 
 # Resources
 ```shell
-fyne bundle -package main -name alarmSound "sounds/Electronic Beeping Alarm Clock.ogg" > sounds.go
+fyne bundle -package main -name alarmSound "sounds/Electronic Beeping Alarm Clock.wav" > sounds.go
+```
+
+
+## Cross-compiling
+
+### To linux
+```shell
+brew install mesa
+brew install --cask xquartz
+ln -s /opt/X11/include/X11 /usr/local/include/X11
 ```
