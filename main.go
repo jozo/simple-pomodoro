@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fyne.io/fyne/app"
+	"fyne.io/fyne/v2/app"
 )
 
 func main() {
