@@ -159,9 +159,9 @@ func (view *PreferencesView) create(app fyne.App) {
 	view.longBreakEntry = newNumberEntry(pref.IntWithFallback("longBreakDur", 15))
 	view.roundsEntry = newNumberEntry(pref.IntWithFallback("numberOfRounds", 4))
 
-	tabs := widget.NewTabContainer(
-		widget.NewTabItem("Preferences", view.createPreferencesLayout(w)),
-		widget.NewTabItem("About", view.createAboutLayout()),
+	tabs := container.NewAppTabs(
+		container.NewTabItem("Preferences", view.createPreferencesLayout(w)),
+		container.NewTabItem("About", view.createAboutLayout()),
 	)
 
 	w.Resize(fyne.NewSize(300, 300))

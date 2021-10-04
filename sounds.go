@@ -2,7 +2,7 @@
 
 package main
 
-import "fyne.io/fyne"
+import "fyne.io/fyne/v2"
 
 var alarmSound = &fyne.StaticResource{
 	StaticName: "Electronic Beeping Alarm Clock.wav",
