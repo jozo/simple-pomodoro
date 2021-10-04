@@ -2,7 +2,6 @@ package main
 
 import (
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/theme"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/wav"
@@ -136,7 +135,7 @@ func (ctrl *Controller) loadModel() {
 }
 
 func (ctrl *Controller) showApp() {
-	ctrl.app.Settings().SetTheme(theme.DarkTheme())
+	ctrl.app.Settings().SetTheme(&ForcedDarkTheme{})
 	ctrl.view.create(ctrl.app, ctrl.model)
 	ctrl.view.setRounds(ctrl.model.currentRound, ctrl.preferences.numberOfRounds)
 	ctrl.view.setStep(ctrl.model.currentStep.kind)

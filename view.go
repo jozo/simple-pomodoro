@@ -59,29 +59,29 @@ func (view *View) create(app fyne.App, model Model) {
 		view.startPauseTapped()
 	})
 
-	l := fyne.NewContainerWithLayout(
+	l := container.New(
 		layout.NewVBoxLayout(),
 		layout.NewSpacer(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewCenterLayout(),
-			fyne.NewContainerWithLayout(
+			container.New(
 				layout.NewVBoxLayout(),
-				fyne.NewContainerWithLayout(
+				container.New(
 					layout.NewCenterLayout(),
 					view.timeLabel,
 				),
-				fyne.NewContainerWithLayout(
+				container.New(
 					layout.NewCenterLayout(),
 					view.startPauseButton,
 				),
 			),
 		),
 		layout.NewSpacer(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewHBoxLayout(),
 			layout.NewSpacer(),
 			view.stepLabel,
-			fyne.NewContainerWithLayout(
+			container.New(
 				layout.NewCenterLayout(),
 				view.roundsLabel,
 			),
@@ -171,9 +171,9 @@ func (view *PreferencesView) create(app fyne.App) {
 
 func (view *PreferencesView) createAboutLayout() *fyne.Container {
 	reportURL, _ := url.Parse("mailto:pomodoro@jozo.io")
-	return fyne.NewContainerWithLayout(
+	return container.New(
 		layout.NewCenterLayout(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewVBoxLayout(),
 			widget.NewLabelWithStyle(
 				"Simple Pomodoro",
@@ -196,7 +196,7 @@ func (view *PreferencesView) createAboutLayout() *fyne.Container {
 }
 
 func (view *PreferencesView) createPreferencesLayout(w fyne.Window) *fyne.Container {
-	form := fyne.NewContainerWithLayout(
+	form := container.New(
 		layout.NewGridLayout(2),
 		newLeftFormItem("Work:"),
 		newRightFormItem(view.workEntry),
@@ -205,11 +205,11 @@ func (view *PreferencesView) createPreferencesLayout(w fyne.Window) *fyne.Contai
 		newLeftFormItem("Long Break:"),
 		newRightFormItem(view.longBreakEntry),
 	)
-	prefLayout := fyne.NewContainerWithLayout(
+	prefLayout := container.New(
 		layout.NewVBoxLayout(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewHBoxLayout(),
-			fyne.NewContainerWithLayout(
+			container.New(
 				layout.NewCenterLayout(),
 				widget.NewLabel("Number of rounds:"),
 			),
@@ -219,7 +219,7 @@ func (view *PreferencesView) createPreferencesLayout(w fyne.Window) *fyne.Contai
 		widget.NewLabel("Steps durations (minutes):"),
 		form,
 		layout.NewSpacer(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewCenterLayout(),
 			widget.NewButton("Save", func() {
 				view.preferencesChanged(view.extract())
@@ -232,10 +232,10 @@ func (view *PreferencesView) createPreferencesLayout(w fyne.Window) *fyne.Contai
 }
 
 func newLeftFormItem(lab string) *fyne.Container {
-	return fyne.NewContainerWithLayout(
+	return container.New(
 		layout.NewHBoxLayout(),
 		layout.NewSpacer(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewCenterLayout(),
 			widget.NewLabel(lab),
 		),
@@ -243,9 +243,9 @@ func newLeftFormItem(lab string) *fyne.Container {
 }
 
 func newRightFormItem(wid *widget.Entry) *fyne.Container {
-	return fyne.NewContainerWithLayout(
+	return container.New(
 		layout.NewHBoxLayout(),
-		fyne.NewContainerWithLayout(
+		container.New(
 			layout.NewCenterLayout(),
 			wid,
 		),
