@@ -1,13 +1,14 @@
 package main
 
 import (
+	"log"
+	"os"
+	"time"
+
 	"fyne.io/fyne/v2"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/speaker"
 	"github.com/faiface/beep/wav"
-	"log"
-	"os"
-	"time"
 )
 
 type Controller struct {
@@ -67,13 +68,25 @@ func (ctrl *Controller) startPauseTimer() {
 	}
 }
 
+func (ctrl *Controller) goToNextStepManually() {
+	if ctrl.model.runState == RUNNING {
+		ctrl.startPauseTimer()
+	}
+	ctrl.remainingTime = 0
+	ctrl.setStateForNextStep()
+}
+
 func (ctrl *Controller) goToNextStep() {
+	ctrl.setStateForNextStep()
+	ctrl.showNotification()
+}
+
+func (ctrl *Controller) setStateForNextStep() {
 	ctrl.setNextStep()
 	ctrl.view.setPlay()
 	ctrl.view.setTime(ctrl.model.currentStep.duration)
 	ctrl.view.setRounds(ctrl.model.currentRound, ctrl.preferences.numberOfRounds)
 	ctrl.view.setStep(ctrl.model.currentStep.kind)
-	ctrl.showNotification()
 }
 
 func (ctrl *Controller) setNextStep() {
@@ -86,6 +99,7 @@ func (ctrl *Controller) setNextStep() {
 func (ctrl *Controller) bindView() {
 	ctrl.view.preferences.preferencesChanged = ctrl.savePreferences
 	ctrl.view.startPauseTapped = ctrl.startPauseTimer
+	ctrl.view.nextBtnTapped = ctrl.goToNextStepManually
 }
 
 func (ctrl *Controller) loadPreferences() {

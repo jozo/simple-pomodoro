@@ -47,6 +47,7 @@ type View struct {
 	// callbacks
 	startPauseTapped   func()
 	notificationClosed func()
+	nextBtnTapped      func()
 }
 
 func (view *View) create(app fyne.App, model Model) {
@@ -55,9 +56,7 @@ func (view *View) create(app fyne.App, model Model) {
 	view.timeLabel.TextSize = 40
 	view.roundsLabel = widget.NewLabel("")
 	view.stepLabel = widget.NewLabel("")
-	view.startPauseButton = widget.NewButtonWithIcon("", theme.MediaPlayIcon(), func() {
-		view.startPauseTapped()
-	})
+	view.startPauseButton = widget.NewButtonWithIcon("", theme.MediaPlayIcon(), view.startPauseTapped)
 
 	l := container.New(
 		layout.NewVBoxLayout(),
@@ -72,7 +71,11 @@ func (view *View) create(app fyne.App, model Model) {
 				),
 				container.New(
 					layout.NewCenterLayout(),
-					view.startPauseButton,
+					container.New(
+						layout.NewHBoxLayout(),
+						view.startPauseButton,
+						newTappableIcon(theme.NavigateNextIcon(), view.nextBtnTapped),
+					),
 				),
 			),
 		),
