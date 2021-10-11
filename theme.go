@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/theme"
 )
 
+// A theme which defaults all calls to dark variant
 type ForcedDarkTheme struct{}
 
 func (m ForcedDarkTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {

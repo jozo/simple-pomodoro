@@ -2,6 +2,7 @@ package main
 
 import "time"
 
+// Application state - running or paused
 type RunState int
 
 const (
@@ -9,6 +10,7 @@ const (
 	PAUSED
 )
 
+// Steps in Pomodoro
 type StepKind int
 
 const (
@@ -17,11 +19,13 @@ const (
 	LONG_BREAK
 )
 
+// A pomodoro step
 type Step struct {
 	kind     StepKind
 	duration time.Duration
 }
 
+// App preferences
 type Preferences struct {
 	numberOfRounds int
 	workStep       Step
@@ -29,6 +33,7 @@ type Preferences struct {
 	longBreakStep  Step
 }
 
+// Main model structure
 type Model struct {
 	runState     RunState
 	currentRound int
