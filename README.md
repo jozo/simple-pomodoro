@@ -20,6 +20,13 @@ You can set number of rounds and their duration in preferences.
 make build
 ```
 
+or
+
+```shell
+gofmt -s -w ./
+go build -ldflags "-s -w"
+```
+
 ### Sounds
 https://freesfx.co.uk
 
