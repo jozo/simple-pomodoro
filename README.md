@@ -1,7 +1,7 @@
 # Simple pomodoro
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/traefik/traefik/blob/master/LICENSE.md)
-[![Go Report Card](https://goreportcard.com/badge/github.com/jozo/simple-pomodoro)](https://goreportcard.com/report/github.com/jozo/simple-pomodoro)
+
 
 
 <p align="center">
