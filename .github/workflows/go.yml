@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install dependencies
-        run: apt install libgl1-mesa-dev xorg-dev libasound2-dev
+        run: sudo apt install libgl1-mesa-dev xorg-dev libasound2-dev
 
       - name: Install Go
         uses: actions/setup-go@v2
