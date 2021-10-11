@@ -24,10 +24,10 @@ jobs:
       - name: Build the app
         run: |
           go get fyne.io/fyne/v2/cmd/fyne
-          make build
+          go build -ldflags "-s -w"
         
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: Simple Pomodoro.tar.xz
-          path: ./
+          name: simple-pomodoro-linux
+          path: ./simple-pomodoro
