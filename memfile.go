@@ -4,12 +4,13 @@ import (
 	"github.com/dsnet/golib/memfile"
 )
 
-// File in memory
+// MemFile represents a file in memory
 // Used for audio in notification
 type MemFile struct {
 	f *memfile.File
 }
 
+// MemFile constructor
 func NewMemFile(b []byte) *MemFile {
 	return &MemFile{f: memfile.New(b)}
 }

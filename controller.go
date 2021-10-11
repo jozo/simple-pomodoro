@@ -11,7 +11,7 @@ import (
 	"github.com/faiface/beep/wav"
 )
 
-// Main logic of the app. Connects model and view.
+// Controller is responsible for main logic of the app. Connects model and view.
 type Controller struct {
 	app              fyne.App
 	model            Model

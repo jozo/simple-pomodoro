@@ -37,7 +37,7 @@ func (t *tappableIcon) Tapped(_ *fyne.PointEvent) {
 func (t *tappableIcon) TappedSecondary(_ *fyne.PointEvent) {
 }
 
-// Constructs gui in Fyne
+// View constructs gui in Fyne
 type View struct {
 	preferences      PreferencesView
 	roundsLabel      *widget.Label
@@ -145,7 +145,7 @@ func (view *View) createNotificationWindow(app fyne.App) {
 	w.Show()
 }
 
-// Gui for preferences in Fyne
+// PreferencesView constructs gui for preferences
 type PreferencesView struct {
 	workEntry      *widget.Entry
 	breakEntry     *widget.Entry
