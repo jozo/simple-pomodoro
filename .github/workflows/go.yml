@@ -25,10 +25,10 @@ jobs:
         run: |
           go get fyne.io/fyne/v2/cmd/fyne
           go build -ldflags "-s -w"
-          chmod +x simple-pomodoro
+          tar -cvf simple-pomodoro.tar ./simple-pomodoro
         
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: simple-pomodoro-linux
-          path: ./simple-pomodoro
+          name: simple-pomodoro
+          path: ./simple-pomodoro.tar
