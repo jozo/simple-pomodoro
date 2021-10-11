@@ -9,14 +9,17 @@ jobs:
     name: Generate cross-platform builds
     runs-on: ubuntu-latest
     steps:
+      - name: Install dependencies
+        - run: apt install libgl1-mesa-dev xorg-dev libasound2-dev
+
+      - name: Install Go
+        - uses: actions/setup-go@v2
+          with:
+            go-version: '^1.17.2'
+        - run: go version
+        
       - name: Checkout the repository
         uses: actions/checkout@v2
-        
-      - name: Generate build files
-        uses: jozo/go-cross-build@patch-1
-        with:
-            platforms: 'linux/amd64, darwin/amd64, windows/amd64'
-            package: ''
-            name: 'simple-pomodoro'
-            compress: 'false'
-            dest: 'dist'
+      
+      - name: Build the app
+        - run: go build -ldflags "-s -w"
