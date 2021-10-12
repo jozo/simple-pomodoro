@@ -23,7 +23,6 @@ jobs:
         run: |
           go get fyne.io/fyne/v2/cmd/fyne
           make pack
-          ls -la
         
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.4
