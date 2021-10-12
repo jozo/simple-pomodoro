@@ -1,5 +1,4 @@
 pack:
-	make clean
 	make build
 	make fyne-pack
 
