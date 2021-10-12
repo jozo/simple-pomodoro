@@ -15,11 +15,6 @@ jobs:
       
       - name: Instal GCC compilers
         uses: msys2/setup-msys2@v2
-      
-      - name: Steps from fyne tutorial
-        run: |
-          pacman -Syu
-          pacman -S git mingw-w64-x86_64-toolchain
         
       - name: Checkout the repository
         uses: actions/checkout@v2
