@@ -9,7 +9,7 @@
 </p>
 
 
-**Simple pomodoro** is a cross-platform application which helps you to follow [Pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) time management technique.
+**Simple pomodoro** is a cross-platform desktop application that helps you to follow the [Pomodoro](https://en.wikipedia.org/wiki/Pomodoro_Technique) time management technique.
 
 You can set number of rounds and their duration in preferences.
 
