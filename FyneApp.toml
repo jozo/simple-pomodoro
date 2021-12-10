@@ -1,0 +1,8 @@
+Website = "https://github.com/jozo/simple-pomodoro/"
+
+[Details]
+Icon = "Icon.png"
+Name = "Simple Pomodoro"
+ID = "io.jozo.simple-pomodoro"
+Version = "1.0.0"
+Build = 1

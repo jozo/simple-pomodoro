@@ -9,9 +9,11 @@ require (
 )
 
 require (
+	github.com/Kodeworks/golang-image-ico v0.0.0-20141118225523-73f0f4cfade9 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
+	github.com/fyne-io/fyne-cross v1.1.2 // indirect
 	github.com/go-gl/gl v0.0.0-20210905235341-f7a045908259 // indirect
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20210727001814-0db043d8d5be // indirect
 	github.com/godbus/dbus/v5 v5.0.5 // indirect
